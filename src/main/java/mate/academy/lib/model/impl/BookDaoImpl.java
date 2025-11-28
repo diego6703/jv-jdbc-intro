@@ -28,7 +28,7 @@ public class BookDaoImpl implements BookDao {
             preparedStatement.setBigDecimal(2, book.getPrice());
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new RuntimeException("Create Book failed");
+                throw new DataProcessingException("Create Book " + book + "failed");
             }
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -85,7 +85,8 @@ public class BookDaoImpl implements BookDao {
             preparedStatement.setLong(3, book.getId());
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new RuntimeException("Update book with id: " + book.getId() + " failed");
+                throw new DataProcessingException(
+                        "Update book with id: " + book.getId() + " failed");
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update book with id: " + book.getId(), e);
