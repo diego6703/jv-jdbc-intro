@@ -15,6 +15,7 @@ public class Main {
         for (int i = 0; i < 5; i++) {
             bookDao.create(bookC);
         }
+        System.out.println(bookDao.deleteById(4L));
         System.out.println(bookDao.findById(2L));
         Book book = new Book();
         book.setId(3L);

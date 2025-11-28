@@ -13,6 +13,7 @@ import mate.academy.lib.ConnectionUtil;
 import mate.academy.lib.Dao;
 import mate.academy.lib.model.Book;
 import mate.academy.lib.model.BookDao;
+import mate.academy.lib.model.DataProcessingException;
 
 @Dao
 public class BookDaoImpl implements BookDao {
@@ -35,7 +36,7 @@ public class BookDaoImpl implements BookDao {
                 book.setId(id);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't add new book", e);
+            throw new DataProcessingException("Can't add new book", e);
         }
         return book;
     }
@@ -52,7 +53,7 @@ public class BookDaoImpl implements BookDao {
                 return Optional.of(book);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't find book with id: " + id, e);
+            throw new DataProcessingException("Can't find book with id: " + id, e);
         }
         return Optional.empty();
     }
@@ -69,7 +70,7 @@ public class BookDaoImpl implements BookDao {
                 books.add(book);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't find all books", e);
+            throw new DataProcessingException("Can't find all books", e);
         }
         return books;
     }
@@ -87,7 +88,7 @@ public class BookDaoImpl implements BookDao {
                 throw new RuntimeException("Update book with id: " + book.getId() + " failed");
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't update book with id: " + book.getId(), e);
+            throw new DataProcessingException("Can't update book with id: " + book.getId(), e);
         }
         return book;
     }
@@ -103,13 +104,13 @@ public class BookDaoImpl implements BookDao {
                 return false;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't Delete book with id: " + id, e);
+            throw new DataProcessingException("Can't Delete book with id: " + id, e);
         }
         return true;
     }
 
     private Book mapToBook(ResultSet resultSet) throws SQLException {
-        Long bookId = resultSet.getLong("id");
+        Long bookId = resultSet.getObject("id", Long.class);
         String title = resultSet.getString("title");
         BigDecimal price = resultSet.getBigDecimal("price");
         Book book = new Book();
